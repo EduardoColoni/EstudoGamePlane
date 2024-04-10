@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     //Pegando as informações do player/Criando as varáiveis
     private Rigidbody2D meuRB;
+    private int minhaCena = 0;
 
     //Minha velocidade
     [SerializeField] private float velocidade = 5;
@@ -39,7 +41,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //Fazendo a velocidade do RB ir para cima
-            meuRB.velocity = Vector2.up * velocidade;
+            meuRB.velocity = Vector2.up * velocidade;   
         }
+    }
+    //Checando se o colisor do avião encostou em outro colisor e resetando o jogo
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        SceneManager.LoadScene(minhaCena);
     }
 }
