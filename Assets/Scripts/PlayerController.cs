@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     //Minha velocidade
     [SerializeField] private float velocidade = 5;
+    [SerializeField] private GameObject puff;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
     {
         Subir();
         LimitandoVelocidade();
+        LimitandoPlayer();
     }
 
     private void LimitandoVelocidade()
@@ -41,12 +43,24 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //Fazendo a velocidade do RB ir para cima
-            meuRB.velocity = Vector2.up * velocidade;   
+            meuRB.velocity = Vector2.up * velocidade;
+            
+            //Criando o meu puff
+            GameObject meuPuff = Instantiate(puff, transform.position, Quaternion.identity);
+            Destroy(meuPuff, 1f);
         }
     }
     //Checando se o colisor do avião encostou em outro colisor e resetando o jogo
     private void OnTriggerEnter2D(Collider2D collision)
     {
         SceneManager.LoadScene(minhaCena);
+    }
+
+    private void LimitandoPlayer()
+    {
+        if(transform.position.y > 5.5f || transform.position.y < -5.5f)
+        {
+            SceneManager.LoadScene(minhaCena);
+        }
     }
 }

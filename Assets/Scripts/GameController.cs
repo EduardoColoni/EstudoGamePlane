@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -25,10 +26,19 @@ public class GameController : MonoBehaviour
     //Variável dos pontos
     private float pontos = 0f;
     [SerializeField] private Text textoPontos;
+    [SerializeField] private Text textoLevel;
+
+    //Inicializando sistemas de level
+    private int level = 1;
+    [SerializeField] private float proximoLevel= 10f;
+
+    [SerializeField] private AudioClip levelUp;
+    [SerializeField] private Vector3 camPos;
     // Start is called before the first frame update
+    
     void Start()
     {
-        
+        camPos = Camera.main.transform.position;
     }
 
     // Update is called once per frame
@@ -36,6 +46,7 @@ public class GameController : MonoBehaviour
     {
         Pontos();
         CriandoObstaculos();
+        GanhaLevel();
     }
 
     private void Pontos()
@@ -54,7 +65,7 @@ public class GameController : MonoBehaviour
         if (timer < 0f)
         {
             //Deixando o valor de tempo aleatório
-            timer = Random.Range(tMin, tMax);
+            timer = Random.Range(tMin / level, tMax);
 
             //Fazendo com que a posição seja aleatória
             posicao.y = Random.Range(posMin, posMax);
@@ -63,4 +74,20 @@ public class GameController : MonoBehaviour
             Instantiate(obstaculo, posicao, Quaternion.identity);
         }
     }
+    private void GanhaLevel()
+    {
+        if (pontos > proximoLevel)
+        {
+            AudioSource.PlayClipAtPoint(levelUp, camPos);
+            level++;
+            proximoLevel *= 2;
+        }
+        textoLevel.text = Mathf.Round(level).ToString();
+    }
+
+    public int RetornaLevel()
+    {
+        return level;
+    }
+
 }
